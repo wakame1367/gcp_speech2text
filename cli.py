@@ -40,7 +40,7 @@ def main():
     args = get_arguments()
     if not is_support_audio_encoding(enums.RecognitionConfig.AudioEncoding,
                                      args.audio_encoding):
-        raise TypeError("{} is not supported audio_encoding".format(args.audio_encoding))
+        raise ValueError("{} is not supported audio_encoding".format(args.audio_encoding))
     client = speech_v1.SpeechClient()
     encoding = enums.RecognitionConfig.AudioEncoding.FLAC
     sample_rate_hertz = args.hertz
