@@ -67,7 +67,7 @@ def main():
     gcs_prefix = "gs://"
     file_path = Path(args.path)
     if args.path.startswith(gcs_prefix):
-        audio = types.RecognitionAudio(content=args.path)
+        audio = types.RecognitionAudio(uri=args.path)
     else:
         if not file_path.exists():
             raise FileExistsError("{} not exist".format(file_path))
