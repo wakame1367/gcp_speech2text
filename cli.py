@@ -48,7 +48,7 @@ def main():
                                      args.audio_encoding):
         raise ValueError("{} is not supported audio_encoding".format(args.audio_encoding))
     client = speech_v1.SpeechClient()
-    encoding = enums.RecognitionConfig.AudioEncoding.FLAC
+    encoding = args.audio_encoding
     sample_rate_hertz = args.hertz
     language_code = args.language_code
     config = {'encoding': encoding,
