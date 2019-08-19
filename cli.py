@@ -11,17 +11,17 @@ from google.cloud.speech_v1 import enums
 
 def get_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("path", "p", type=str, help="gcs link or local file path")
+    parser.add_argument("path", type=str, help="gcs link or local file path")
     # support audio_encoding format url
     # https://cloud.google.com/speech-to-text/docs/encoding
-    parser.add_argument("--audio_encoding", "-a", type=str,
+    parser.add_argument("--audio_encoding", type=str,
                         help="audio encoding format\n"
                              "support audio encoding format: https://cloud.google.com/speech-to-text/docs/encoding\n"
                              "(default=FLAC)", default="FLAC")
-    parser.add_argument("--hertz", "-h", type=int, help="sampling rate (default=44100)", default=44100)
+    parser.add_argument("--hertz", type=int, help="sampling rate (default=44100)", default=44100)
     # support language_code url
     # https://cloud.google.com/speech-to-text/docs/languages
-    parser.add_argument("--language_code", "-l", type=str,
+    parser.add_argument("--language_code", type=str,
                         help="want to transcript language code\n"
                              "support language_code: https://cloud.google.com/speech-to-text/docs/languages\n"
                              "(default=en-US)", default="en-US")
