@@ -7,8 +7,8 @@ import argparse
 from pathlib import Path
 from pprint import pprint
 
-from google.cloud import speech_v1
-from google.cloud.speech_v1 import enums, types
+from google.cloud import speech
+from google.cloud.speech import enums, types
 
 data_path = Path("resources")
 if not data_path.exists():
@@ -79,15 +79,19 @@ def main():
     if not is_support_audio_encoding(enums.RecognitionConfig.AudioEncoding,
                                      args.audio_encoding):
         raise ValueError("{} is not supported audio_encoding".format(args.audio_encoding))
-    client = speech_v1.SpeechClient()
+    client = speech.SpeechClient()
     encoding = args.audio_encoding
     sample_rate_hertz = args.hertz
     language_code = args.language_code
-    config = {'encoding': encoding,
-              'sample_rate_hertz': sample_rate_hertz,
-              'language_code': language_code}
 
-    response = client.long_running_recognize(config, audio)
+    config = types.RecognitionConfig(
+        encoding=encoding.upper(),
+        sample_rate_hertz=sample_rate_hertz,
+        language_code=language_code)
+
+    operation = client.long_running_recognize(config, audio)
+    print('Waiting for operation to complete...')
+    response = operation.result(timeout=360)
     pprint(response)
     write_transcript(file_path, response)
 
