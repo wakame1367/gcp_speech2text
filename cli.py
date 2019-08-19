@@ -5,9 +5,34 @@ https://github.com/googleapis/google-cloud-python/tree/master/speech
 
 import argparse
 from pathlib import Path
+from pprint import pprint
 
 from google.cloud import speech_v1
 from google.cloud.speech_v1 import enums, types
+
+data_path = Path("resources")
+if not data_path.exists():
+    data_path.mkdir()
+
+
+def write_transcript(input_file_path, response):
+    transcript_file = "resources/trs_{}.txt".format(input_file_path.stem)
+    with open(transcript_file, "w", encoding="utf-8") as f:
+        for idx, result in enumerate(response.results):
+            # The first alternative is the most likely one for this portion.
+            f.write(str(idx))
+            f.write("\n")
+            f.write("transcript: ")
+            f.write(result.alternatives[0].transcript)
+            f.write("\n")
+            f.write("confidence: ")
+            f.write(str(result.alternatives[0].confidence))
+            f.write("\n")
+            f.write("words: [")
+            for word in result.alternatives[0].words:
+                f.write(word)
+                f.write(", ")
+            f.write("]\n")
 
 
 def get_arguments():
@@ -40,10 +65,10 @@ def is_support_audio_encoding(audio_config, input_config):
 def main():
     args = get_arguments()
     gcs_prefix = "gs://"
+    file_path = Path(args.path)
     if args.path.startswith(gcs_prefix):
         audio = types.RecognitionAudio(content=args.path)
     else:
-        file_path = Path(args.path)
         if not file_path.exists():
             raise FileExistsError("{} not exist".format(file_path))
         else:
@@ -63,6 +88,8 @@ def main():
               'language_code': language_code}
 
     response = client.recognize(config, audio)
+    pprint(response)
+    write_transcript(file_path, response)
 
 
 if __name__ == '__main__':
