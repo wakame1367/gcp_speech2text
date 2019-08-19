@@ -7,12 +7,25 @@ import argparse
 from pathlib import Path
 from pprint import pprint
 
+from pydub import AudioSegment
 from google.cloud import speech
 from google.cloud.speech import enums, types
 
 data_path = Path("resources")
 if not data_path.exists():
     data_path.mkdir()
+
+
+# ref: https://gist.github.com/arjunsharma97/0ecac61da2937ec52baf61af1aa1b759
+def convert_to_wav(filepath):
+    ext = filepath.suffix
+    try:
+        track = AudioSegment.from_file(filepath, ext)
+        wav_file_name = "{}.wav".format(filepath.stem)
+        wav_file_path = data_path / wav_file_name
+        track.export(wav_file_path, "wav")
+    except:
+        pass
 
 
 def write_transcript(input_file_path, response):
