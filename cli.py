@@ -87,7 +87,7 @@ def main():
               'sample_rate_hertz': sample_rate_hertz,
               'language_code': language_code}
 
-    response = client.recognize(config, audio)
+    response = client.long_running_recognize(config, audio)
     pprint(response)
     write_transcript(file_path, response)
 
