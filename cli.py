@@ -7,7 +7,7 @@ import argparse
 from pathlib import Path
 
 from google.cloud import speech_v1
-from google.cloud.speech_v1 import enums
+from google.cloud.speech_v1 import enums, types
 
 
 def get_arguments():
@@ -40,10 +40,17 @@ def is_support_audio_encoding(audio_config, input_config):
 def main():
     args = get_arguments()
     gcs_prefix = "gs://"
-    if not args.path.startswith(gcs_prefix):
+    if args.path.startswith(gcs_prefix):
+        audio = types.RecognitionAudio(content=args.path)
+    else:
         file_path = Path(args.path)
         if not file_path.exists():
             raise FileExistsError("{} not exist".format(file_path))
+        else:
+            with file_path.open("rb") as audio_file:
+                content = audio_file.read()
+                audio = types.RecognitionAudio(content=content)
+
     if not is_support_audio_encoding(enums.RecognitionConfig.AudioEncoding,
                                      args.audio_encoding):
         raise ValueError("{} is not supported audio_encoding".format(args.audio_encoding))
@@ -54,8 +61,6 @@ def main():
     config = {'encoding': encoding,
               'sample_rate_hertz': sample_rate_hertz,
               'language_code': language_code}
-    uri = 'gs://bucket_name/file_name.flac'
-    audio = {'uri': uri}
 
     response = client.recognize(config, audio)
 
