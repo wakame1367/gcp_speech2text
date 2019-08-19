@@ -4,6 +4,7 @@ https://github.com/googleapis/google-cloud-python/tree/master/speech
 """
 
 import argparse
+from pathlib import Path
 
 from google.cloud import speech_v1
 from google.cloud.speech_v1 import enums
@@ -38,6 +39,11 @@ def is_support_audio_encoding(audio_config, input_config):
 
 def main():
     args = get_arguments()
+    gcs_prefix = "gs://"
+    if not args.path.startswith(gcs_prefix):
+        file_path = Path(args.path)
+        if not file_path.exists():
+            raise FileExistsError("{} not exist".format(file_path))
     if not is_support_audio_encoding(enums.RecognitionConfig.AudioEncoding,
                                      args.audio_encoding):
         raise ValueError("{} is not supported audio_encoding".format(args.audio_encoding))
