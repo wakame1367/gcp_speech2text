@@ -15,3 +15,24 @@ pipenv install
 ```
 python cli.py  path/to/file or gcs://path/to/file
 ```
+
+```
+usage: cli.py [-h] [--audio_encoding AUDIO_ENCODING] [--hertz HERTZ]
+              [--language_code LANGUAGE_CODE]
+              path
+
+positional arguments:
+  path                  gcs link or local file path
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --audio_encoding AUDIO_ENCODING
+                        audio encoding format support audio encoding format:
+                        https://cloud.google.com/speech-to-text/docs/encoding
+                        (default=FLAC)
+  --hertz HERTZ         sampling rate (default=44100)
+  --language_code LANGUAGE_CODE
+                        want to transcript language code support
+                        language_code: https://cloud.google.com/speech-to-
+                        text/docs/languages (default=en-US)
+```
